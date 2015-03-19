@@ -1,0 +1,10 @@
+{
+  "name": "d3-lasso-plugin",
+  "version": "0.1",
+  "main": "lasso.js",
+  "scripts": [
+    "lasso.js"
+  ],
+  "ignore": [
+  ]
+}
