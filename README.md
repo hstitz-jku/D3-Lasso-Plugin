@@ -63,6 +63,13 @@ The area() parameter takes in a selection representing the element to be used as
 lasso.area(d3.select("#myLassoRect")); // the lasso will be trigger whenever a user clicks and drags on #myLassoRect
 ```
 
+lasso.**itemOffset**(_{top:0, left:0}_)
+
+The itemOffset() parameter takes an object that determines the position of every items according to the document root position. The default value is set to _{top:0, left:0}_. If no input is specified, the function returns the lasso's current parameter.
+```
+lasso.itemOffset({top:123, left:123}); // adds offset to every item
+```
+
 lasso.**on**(_type,[func]_)
 
 The on() parameter takes in a type of event and a function for that event. There are 3 types of events that can be defined:
