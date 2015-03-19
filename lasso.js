@@ -1,6 +1,7 @@
 d3.lasso = function() {
 
 	var	items = null,
+    itemOffset = {top:0, left:0},
 		closePathDistance = 75,
 		closePathSelect = true,
 		isPathClosed = false,
@@ -42,14 +43,14 @@ d3.lasso = function() {
 			items[0].forEach(function(d) {
 				d.hoverSelected = false;
 				d.loopSelected = false;
-				var cur_box = d.getBBox();
-			  	d.lassoPoint = {
-			  		cx: Math.round(cur_box.x + cur_box.width/2),
-					cy: Math.round(cur_box.y + cur_box.height/2),
+				var cur_box = d.getBoundingClientRect();
+				d.lassoPoint = {
+					cx: Math.round(cur_box.left - itemOffset.left + cur_box.width/2),
+					cy: Math.round(cur_box.top - itemOffset.top + cur_box.height/2),
 					edges: {top:0,right:0,bottom:0,left:0},
 					close_edges: {left: 0, right: 0}
-			  	};
-			})
+				};
+			});
 
 			// if hover is on, add hover function
 			if(hoverSelect==true) {
@@ -64,8 +65,8 @@ d3.lasso = function() {
 		}
 
 		function dragmove() {
-			var x = d3.mouse(this)[0]; 
-			var y = d3.mouse(this)[1]; 
+			var x = d3.mouse(this)[0];
+			var y = d3.mouse(this)[1];
 			// Initialize the path or add the latest point to it
 			if (path=="") {
 				path = path + "M " + x + " " + y;
@@ -114,7 +115,7 @@ d3.lasso = function() {
 			var path_node = dyn_path.node();
 		  	var path_length_end = path_node.getTotalLength();
 		  	var last_pos = path_node.getPointAtLength(path_length_start-1);
-		  
+
 		  	for (var i = path_length_start; i<=path_length_end; i++) {
 		  		var cur_pos = path_node.getPointAtLength(i);
 		  		var cur_pos_obj = {
@@ -124,21 +125,21 @@ d3.lasso = function() {
 			  	var prior_pos = path_node.getPointAtLength(i-1);
 			  	var prior_pos_obj = {
 			  		x:Math.round(prior_pos.x*100)/100,
-			  		y:Math.round(prior_pos.y*100)/100,
+			  		y:Math.round(prior_pos.y*100)/100
 			  	};
 
 		  		items[0].filter(function(d) {
-		  			var a; 
-		  			if(d.lassoPoint.cy === cur_pos_obj.y && d.lassoPoint.cy != prior_pos_obj.y) { 
+		  			var a;
+		  			if(d.lassoPoint.cy === cur_pos_obj.y && d.lassoPoint.cy != prior_pos_obj.y) {
 	  					last_known_point = {
 	  						x: prior_pos_obj.x,
 	  						y: prior_pos_obj.y
 	  					};
-	  					a=false; 
-	  				} 
+	  					a=false;
+	  				}
 		  			else if (d.lassoPoint.cy === cur_pos_obj.y && d.lassoPoint.cy === prior_pos_obj.y) {
 	  					a = false;
-	  				} 
+	  				}
 		  			else if (d.lassoPoint.cy === prior_pos_obj.y && d.lassoPoint.cy != cur_pos_obj.y) {
 		  				a = sign(d.lassoPoint.cy-cur_pos_obj.y)!=sign(d.lassoPoint.cy-last_known_point.y);
 		  			}
@@ -148,7 +149,7 @@ d3.lasso = function() {
 	  						y: prior_pos_obj.y
 	  					};
 		  				a = sign(d.lassoPoint.cy-cur_pos_obj.y)!=sign(d.lassoPoint.cy-prior_pos_obj.y);
-		  			} 
+		  			}
 		  			return a;
 		  		}).forEach(function(d) {
 		  			if(cur_pos_obj.x>d.lassoPoint.cx) {
@@ -188,14 +189,14 @@ d3.lasso = function() {
 	  				else {
 	  					a.loopSelected = false;
 	  				}
-	  			});	
+	  			});
 			}
 			else {
 				items[0].forEach(function(d) {
 					d.loopSelected = false;
 				})
 			}
-			
+
 			// Tag possible items
 			d3.selectAll(items[0].filter(function(d) {return (d.loopSelected && isPathClosed) || d.hoverSelected}))
 				.attr("d",function(d) {return d.possible = true;});
@@ -229,8 +230,8 @@ d3.lasso = function() {
 			origin_node.attr("display","none");
 
 			// Run user defined end function
-			on.end();	
-	  		
+			on.end();
+
 		}
 	}
 
@@ -249,6 +250,12 @@ d3.lasso = function() {
     	})
     	return lasso;
 	};
+
+  lasso.itemOffset  = function(_) {
+    if (!arguments.length) return itemOffset;
+    itemOffset = _;
+    return lasso;
+  };
 
 	lasso.closePathDistance  = function(_) {
 		if (!arguments.length) return closePathDistance;
