@@ -1,0 +1,22 @@
+{
+  "name": "d3-lasso-plugin",
+  "version": "1.0.0",
+  "description": "A lasso selection tool for D3 v3",
+  "main": "lasso.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thinkh/D3-Lasso-Plugin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thinkh/D3-Lasso-Plugin/issues"
+  },
+  "homepage": "https://github.com/thinkh/D3-Lasso-Plugin#readme",
+  "dependencies": {
+    "d3": "3.5.17"
+  }
+}
